@@ -62,7 +62,9 @@ function createEmptyRowWithForm() {
   const tr = document.createElement('tr')
   tr.classList.add('event-item')
 
-  // Create a form to wrap the inputs and add event
+  const td = document.createElement('td')
+  td.colSpan = 4 // spans all columns
+
   const form = document.createElement('form')
   form.classList.add('add-event-form')
   form.style.display = 'flex'
@@ -102,14 +104,12 @@ function createEmptyRowWithForm() {
     tr.remove()
   })
 
-  // Add inputs and addButton to form
   form.appendChild(eventNameInput)
   form.appendChild(startDateInput)
   form.appendChild(endDateInput)
   form.appendChild(addButton)
   form.appendChild(cancelButton)
 
-  // Prevent default form submission and handle event creation
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
     e.stopPropagation()
@@ -140,26 +140,8 @@ function createEmptyRowWithForm() {
     }
   })
 
-  // Create cells for each form input and button
-  const eventNameCell = document.createElement('td')
-  eventNameCell.appendChild(eventNameInput)
-
-  const startDateCell = document.createElement('td')
-  startDateCell.appendChild(startDateInput)
-
-  const endDateCell = document.createElement('td')
-  endDateCell.appendChild(endDateInput)
-
-  const actionsCell = document.createElement('td')
-  actionsCell.appendChild(addButton)
-  actionsCell.appendChild(cancelButton)
-
-  // Append cells to form row
-  tr.appendChild(eventNameCell)
-  tr.appendChild(startDateCell)
-  tr.appendChild(endDateCell)
-  tr.appendChild(actionsCell)
-
+  td.appendChild(form)
+  tr.appendChild(td)
   return tr
 }
 
