@@ -62,30 +62,102 @@ function createEmptyRowWithForm() {
   const tr = document.createElement('tr')
   tr.classList.add('event-item')
 
-  const formCell = document.createElement('td')
-  formCell.colSpan = 4 // Span across all columns
-
+  // Create a form to wrap the inputs and add event
   const form = document.createElement('form')
   form.classList.add('add-event-form')
-  form.innerHTML = `
-    <input type="text" name="eventName" placeholder="Event Name" required>
-    <input type="date" name="startDate" required>
-    <input type="date" name="endDate" required>
-    <button type="submit">Add Event</button>
-  `
+  form.style.display = 'flex'
+  form.style.gap = '8px'
 
-  // Cancel button to remove the form
+  // Event Name input
+  const eventNameInput = document.createElement('input')
+  eventNameInput.type = 'text'
+  eventNameInput.name = 'eventName'
+  eventNameInput.placeholder = 'Event Name'
+  eventNameInput.required = true
+
+  // Start Date input
+  const startDateInput = document.createElement('input')
+  startDateInput.type = 'date'
+  startDateInput.name = 'startDate'
+  startDateInput.required = true
+
+  // End Date input
+  const endDateInput = document.createElement('input')
+  endDateInput.type = 'date'
+  endDateInput.name = 'endDate'
+  endDateInput.required = true
+
+  // Add Event button
+  const addButton = document.createElement('button')
+  addButton.classList.add('add-button')
+  addButton.type = 'submit'
+  addButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
+
+  // Cancel button
   const cancelButton = document.createElement('button')
   cancelButton.classList.add('cancel-button')
   cancelButton.type = 'button'
-  cancelButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CancelIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41l5.59 5.59L5 17.59 6.41 19l5.59-5.59L17.59 19 19 17.59l-5.59-5.59L19 6.41z" fill="currentColor"></path></svg>`
+  cancelButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DeleteIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"></path></svg>`
   cancelButton.addEventListener('click', () => {
     tr.remove()
   })
 
-  formCell.appendChild(form)
-  formCell.appendChild(cancelButton)
-  tr.appendChild(formCell)
+  // Add inputs and addButton to form
+  form.appendChild(eventNameInput)
+  form.appendChild(startDateInput)
+  form.appendChild(endDateInput)
+  form.appendChild(addButton)
+
+  // Prevent default form submission and handle event creation
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault()
+    e.stopPropagation()
+
+    if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
+      return
+
+    const event = {
+      eventName: eventNameInput.value,
+      startDate: startDateInput.value,
+      endDate: endDateInput.value,
+    }
+
+    const res = await fetch(BASE_URL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(event),
+    })
+
+    if (res.ok) {
+      const data = await res.json()
+      eventsListElement.appendChild(createEventRow(data))
+      tr.remove()
+    } else {
+      console.error('Error adding event:', res.statusText)
+    }
+  })
+
+  // Create cells for each form input and button
+  const eventNameCell = document.createElement('td')
+  eventNameCell.appendChild(eventNameInput)
+
+  const startDateCell = document.createElement('td')
+  startDateCell.appendChild(startDateInput)
+
+  const endDateCell = document.createElement('td')
+  endDateCell.appendChild(endDateInput)
+
+  const actionsCell = document.createElement('td')
+  actionsCell.appendChild(addButton)
+  actionsCell.appendChild(cancelButton)
+
+  // Append cells to form row
+  tr.appendChild(eventNameCell)
+  tr.appendChild(startDateCell)
+  tr.appendChild(endDateCell)
+  tr.appendChild(actionsCell)
 
   return tr
 }
@@ -93,6 +165,8 @@ function createEmptyRowWithForm() {
 loadEvents()
 
 // TODO => add edit, delete, and save button function with custom args
+// TODO => DRY up the code for creating event rows and empty rows with forms
+// TODO => improve event listener handling to avoid memory leaks
 
 // Add event listener for the "Add Event" button to toggle the form visibility
 addEventButtonElement.addEventListener('click', () => {
