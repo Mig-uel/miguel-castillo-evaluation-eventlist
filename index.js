@@ -1,3 +1,10 @@
+/**
+ * IGNORE THIS FILE
+ *
+ * I THOUGHT WE HAD TO IMPLEMENT THE BACKEND AS WELL. BUT I BELIEVE YOU MEANT TO USE
+ * JSON-SERVER AS A MOCK BACKEND INSTEAD.
+ */
+
 import express from 'express'
 import cors from 'cors'
 
