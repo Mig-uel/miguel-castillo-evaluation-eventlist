@@ -1,8 +1,10 @@
 import express from 'express'
+import cors from 'cors'
 
 const app = express()
 const BASE_URL = 'http://localhost:3000/events'
 
+app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: true }))
 
