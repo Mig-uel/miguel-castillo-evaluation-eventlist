@@ -26,6 +26,7 @@ table.events-list {
   width: 100%;
 }
 
+.add-event-button,
 .add-button {
   background-color: #008cba;
   color: white;
