@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Events List</title>
+</head>
+
+<body>
+  <h1>Events List</h1>
+
+  <button class="add-event">Add Event</button>
+
+  <form class="add-event-form" style="display: none;">
+    <input type="text" name="eventName" placeholder="Event Name" required>
+    <input type="date" name="startDate" required>
+    <input type="date" name="endDate" required>
+
+    <button type="submit">Submit</button>
+    <button type="button" class="cancel">Cancel</button>
+  </form>
+
+  <h2>Upcoming Events</h2>
+  <ul class="events-list">
+    <!-- Events will be dynamically added here -->
+  </ul>
+
+
+  <script src="./script.js"></script>
+</body>
+
+</html>
