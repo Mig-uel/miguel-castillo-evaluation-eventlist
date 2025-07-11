@@ -107,6 +107,7 @@ function createEmptyRowWithForm() {
   form.appendChild(startDateInput)
   form.appendChild(endDateInput)
   form.appendChild(addButton)
+  form.appendChild(cancelButton)
 
   // Prevent default form submission and handle event creation
   form.addEventListener('submit', async (e) => {
@@ -171,5 +172,6 @@ loadEvents()
 // Add event listener for the "Add Event" button to toggle the form visibility
 addEventButtonElement.addEventListener('click', () => {
   const emptyRow = createEmptyRowWithForm()
+
   eventsListElement.appendChild(emptyRow)
 })
