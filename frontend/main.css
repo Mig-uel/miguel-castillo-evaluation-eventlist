@@ -26,6 +26,15 @@ table.events-list {
   width: 100%;
 }
 
+.cancel-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 .delete-button {
   background-color: red;
   color: white;
