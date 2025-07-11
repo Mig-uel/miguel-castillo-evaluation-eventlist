@@ -1,6 +1,7 @@
 const BASE_URL = 'http://localhost:3100/events'
 const eventsListElement = document.querySelector('.events-list-body')
 const addEventFormElement = document.querySelector('.add-event-form')
+const addEventButtonElement = document.querySelector('.add-event-button')
 
 async function loadEvents() {
   try {
@@ -57,7 +58,37 @@ function createEventRow(event) {
   return tr
 }
 
+function createEmptyRowWithForm() {
+  const tr = document.createElement('tr')
+  tr.classList.add('event-item')
+
+  const formCell = document.createElement('td')
+  formCell.colSpan = 4 // Span across all columns
+
+  const form = document.createElement('form')
+  form.classList.add('add-event-form')
+  form.innerHTML = `
+    <input type="text" name="eventName" placeholder="Event Name" required>
+    <input type="date" name="startDate" required>
+    <input type="date" name="endDate" required>
+    <button type="submit">Add Event</button>
+  `
+
+  formCell.appendChild(form)
+  tr.appendChild(formCell)
+
+  return tr
+}
+
 loadEvents()
+
+// TODO => add edit, delete, and save button function with custom args
+
+// Add event listener for the "Add Event" button to toggle the form visibility
+addEventButtonElement.addEventListener('click', () => {
+  const emptyRow = createEmptyRowWithForm()
+  eventsListElement.appendChild(emptyRow)
+})
 
 // Add event listener for the form submission to add a new event
 addEventFormElement.addEventListener('submit', async (e) => {
