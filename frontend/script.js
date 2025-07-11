@@ -74,7 +74,17 @@ function createEmptyRowWithForm() {
     <button type="submit">Add Event</button>
   `
 
+  // Cancel button to remove the form
+  const cancelButton = document.createElement('button')
+  cancelButton.classList.add('cancel-button')
+  cancelButton.type = 'button'
+  cancelButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="CancelIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41l5.59 5.59L5 17.59 6.41 19l5.59-5.59L17.59 19 19 17.59l-5.59-5.59L19 6.41z" fill="currentColor"></path></svg>`
+  cancelButton.addEventListener('click', () => {
+    tr.remove()
+  })
+
   formCell.appendChild(form)
+  formCell.appendChild(cancelButton)
   tr.appendChild(formCell)
 
   return tr
