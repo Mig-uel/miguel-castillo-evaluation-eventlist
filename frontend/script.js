@@ -173,37 +173,3 @@ addEventButtonElement.addEventListener('click', () => {
   const emptyRow = createEmptyRowWithForm()
   eventsListElement.appendChild(emptyRow)
 })
-
-// Add event listener for the form submission to add a new event
-addEventFormElement.addEventListener('submit', async (e) => {
-  e.preventDefault()
-  e.stopPropagation()
-
-  const eventName = addEventFormElement.querySelector('[name="eventName"]')
-  const startDate = addEventFormElement.querySelector('[name="startDate"]')
-  const endDate = addEventFormElement.querySelector('[name="endDate"]')
-
-  if (!eventName.value || !startDate.value || !endDate.value) return
-
-  const event = {
-    eventName: eventName.value,
-    startDate: startDate.value,
-    endDate: endDate.value,
-  }
-
-  const res = await fetch(BASE_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify(event),
-  })
-
-  if (res.ok) {
-    const data = await res.json()
-    eventsListElement.appendChild(createEventRow(data))
-    addEventFormElement.reset()
-  } else {
-    console.error('Error adding event:', res.statusText)
-  }
-})
