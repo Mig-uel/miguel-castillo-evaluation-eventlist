@@ -33,7 +33,8 @@ async function loadEvents() {
       const deleteButton = document.createElement('button')
       deleteButton.classList.add('delete-button')
       deleteButton.textContent = 'Delete'
-      deleteButton.addEventListener('click', async () => {
+      deleteButton.addEventListener('click', async (e) => {
+        e.stopPropagation()
         await fetch(`${BASE_URL}/${ev.id}`, { method: 'DELETE' })
         tr.remove()
       })
@@ -94,6 +95,7 @@ loadEvents()
 // Add event listener for the form submission to add a new event
 addEventFormElement.addEventListener('submit', async (e) => {
   e.preventDefault()
+  e.stopPropagation()
 
   const eventName = addEventFormElement.querySelector('[name="eventName"]')
   const startDate = addEventFormElement.querySelector('[name="startDate"]')
