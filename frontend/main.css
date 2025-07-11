@@ -26,8 +26,17 @@ table.events-list {
   width: 100%;
 }
 
+.add-button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 .cancel-button {
-  background-color: #f44336;
+  background-color: red;
   color: white;
   border: none;
   padding: 5px 10px;
