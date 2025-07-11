@@ -3,50 +3,55 @@ const eventsListElement = document.querySelector('.events-list-body')
 const addEventFormElement = document.querySelector('.add-event-form')
 
 async function loadEvents() {
-  const res = await fetch(BASE_URL)
-  const data = await res.json()
+  try {
+    const res = await fetch(BASE_URL)
+    const data = await res.json()
 
-  if (!data || !Array.isArray(data)) {
-    console.error('Invalid data format received:', data)
-    return
-  }
+    if (!data || !Array.isArray(data)) {
+      console.error('Invalid data format received:', data)
+      return
+    }
 
-  const eventsList = data.map((ev) => {
-    const tr = document.createElement('tr')
-    tr.classList.add('event-item')
+    const eventsList = data.map((ev) => {
+      const tr = document.createElement('tr')
+      tr.classList.add('event-item')
 
-    const eventNameElement = document.createElement('td')
-    eventNameElement.classList.add('event-name')
-    eventNameElement.textContent = ev.eventName
+      const eventNameElement = document.createElement('td')
+      eventNameElement.classList.add('event-name')
+      eventNameElement.textContent = ev.eventName
 
-    const startDateElement = document.createElement('td')
-    startDateElement.classList.add('event-start')
-    startDateElement.textContent = ev.startDate
+      const startDateElement = document.createElement('td')
+      startDateElement.classList.add('event-start')
+      startDateElement.textContent = ev.startDate
 
-    const endDateElement = document.createElement('td')
-    endDateElement.classList.add('event-end')
-    endDateElement.textContent = ev.endDate
+      const endDateElement = document.createElement('td')
+      endDateElement.classList.add('event-end')
+      endDateElement.textContent = ev.endDate
 
-    const deleteButtonElement = document.createElement('td')
-    deleteButtonElement.classList.add('event-delete')
-    const deleteButton = document.createElement('button')
-    deleteButton.classList.add('delete-button')
-    deleteButton.textContent = 'Delete'
-    deleteButton.addEventListener('click', async () => {
-      await fetch(`${BASE_URL}/${ev.id}`, { method: 'DELETE' })
-      tr.remove()
+      const deleteButtonElement = document.createElement('td')
+      deleteButtonElement.classList.add('event-delete')
+      const deleteButton = document.createElement('button')
+      deleteButton.classList.add('delete-button')
+      deleteButton.textContent = 'Delete'
+      deleteButton.addEventListener('click', async () => {
+        await fetch(`${BASE_URL}/${ev.id}`, { method: 'DELETE' })
+        tr.remove()
+      })
+
+      deleteButtonElement.appendChild(deleteButton)
+      tr.appendChild(eventNameElement)
+      tr.appendChild(startDateElement)
+      tr.appendChild(endDateElement)
+      tr.appendChild(deleteButtonElement)
+
+      return tr
     })
 
-    deleteButtonElement.appendChild(deleteButton)
-    tr.appendChild(eventNameElement)
-    tr.appendChild(startDateElement)
-    tr.appendChild(endDateElement)
-    tr.appendChild(deleteButtonElement)
-
-    return tr
-  })
-
-  eventsListElement.append(...eventsList)
+    eventsListElement.append(...eventsList)
+  } catch (error) {
+    console.error('Error loading events:', error)
+    return
+  }
 }
 
 function createEventRow(event) {
