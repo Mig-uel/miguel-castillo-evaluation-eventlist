@@ -45,6 +45,15 @@ table.events-list {
   border-radius: 4px;
 }
 
+.save-button {
+  background-color: #008cba;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+}
+
 .edit-button {
   background-color: #008cba;
   color: white;
