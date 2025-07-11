@@ -47,8 +47,85 @@ function createEventRow(event) {
   <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
 </svg>`
   editButton.addEventListener('click', () => {
-    // Handle edit button click
+    const editableRow = createEditableRow(event, tr)
+    tr.replaceWith(editableRow)
   })
+  // Helper to create editable row for inline editing
+  function createEditableRow(event, originalTr) {
+    const tr = document.createElement('tr')
+    tr.classList.add('event-item')
+
+    // Event Name input
+    const eventNameTd = document.createElement('td')
+    const eventNameInput = document.createElement('input')
+    eventNameInput.type = 'text'
+    eventNameInput.value = event.eventName
+    eventNameInput.required = true
+    eventNameTd.appendChild(eventNameInput)
+
+    // Start Date input
+    const startDateTd = document.createElement('td')
+    const startDateInput = document.createElement('input')
+    startDateInput.type = 'date'
+    startDateInput.value = event.startDate
+    startDateInput.required = true
+    startDateTd.appendChild(startDateInput)
+
+    // End Date input
+    const endDateTd = document.createElement('td')
+    const endDateInput = document.createElement('input')
+    endDateInput.type = 'date'
+    endDateInput.value = event.endDate
+    endDateInput.required = true
+    endDateTd.appendChild(endDateInput)
+
+    // Save button
+    const saveTd = document.createElement('td')
+    const saveButton = document.createElement('button')
+    saveButton.classList.add('save-button')
+    saveButton.type = 'button'
+    saveButton.textContent = 'Save'
+    saveButton.addEventListener('click', async () => {
+      if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
+        return
+      const updatedEvent = {
+        eventName: eventNameInput.value,
+        startDate: startDateInput.value,
+        endDate: endDateInput.value,
+      }
+      const res = await fetch(`${BASE_URL}/${event.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(updatedEvent),
+      })
+      if (res.ok) {
+        const data = await res.json()
+        tr.replaceWith(createEventRow(data))
+      } else {
+        alert('Failed to update event')
+      }
+    })
+    saveTd.appendChild(saveButton)
+
+    // Cancel button
+    const cancelTd = document.createElement('td')
+    const cancelButton = document.createElement('button')
+    cancelButton.classList.add('cancel-button')
+    cancelButton.type = 'button'
+    cancelButton.textContent = 'Cancel'
+    cancelButton.addEventListener('click', () => {
+      tr.replaceWith(originalTr)
+    })
+    cancelTd.appendChild(cancelButton)
+
+    tr.appendChild(eventNameTd)
+    tr.appendChild(startDateTd)
+    tr.appendChild(endDateTd)
+    tr.appendChild(saveTd)
+    tr.appendChild(cancelTd)
+
+    return tr
+  }
   editButtonElement.appendChild(editButton)
 
   // Create delete button
