@@ -12,41 +12,7 @@ async function loadEvents() {
       return
     }
 
-    const eventsList = data.map((ev) => {
-      const tr = document.createElement('tr')
-      tr.classList.add('event-item')
-
-      const eventNameElement = document.createElement('td')
-      eventNameElement.classList.add('event-name')
-      eventNameElement.textContent = ev.eventName
-
-      const startDateElement = document.createElement('td')
-      startDateElement.classList.add('event-start')
-      startDateElement.textContent = ev.startDate
-
-      const endDateElement = document.createElement('td')
-      endDateElement.classList.add('event-end')
-      endDateElement.textContent = ev.endDate
-
-      const deleteButtonElement = document.createElement('td')
-      deleteButtonElement.classList.add('event-delete')
-      const deleteButton = document.createElement('button')
-      deleteButton.classList.add('delete-button')
-      deleteButton.textContent = 'Delete'
-      deleteButton.addEventListener('click', async (e) => {
-        e.stopPropagation()
-        await fetch(`${BASE_URL}/${ev.id}`, { method: 'DELETE' })
-        tr.remove()
-      })
-
-      deleteButtonElement.appendChild(deleteButton)
-      tr.appendChild(eventNameElement)
-      tr.appendChild(startDateElement)
-      tr.appendChild(endDateElement)
-      tr.appendChild(deleteButtonElement)
-
-      return tr
-    })
+    const eventsList = data.map((ev) => createEventRow(ev))
 
     eventsListElement.append(...eventsList)
   } catch (error) {
@@ -71,11 +37,12 @@ function createEventRow(event) {
   endDateElement.classList.add('event-end')
   endDateElement.textContent = event.endDate
 
+  // Create delete button
   const deleteButtonElement = document.createElement('td')
   deleteButtonElement.classList.add('event-delete')
   const deleteButton = document.createElement('button')
   deleteButton.classList.add('delete-button')
-  deleteButton.textContent = 'Delete'
+  deleteButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DeleteIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"></path></svg>`
   deleteButton.addEventListener('click', async () => {
     await fetch(`${BASE_URL}/${event.id}`, { method: 'DELETE' })
     tr.remove()
