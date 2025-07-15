@@ -270,7 +270,6 @@ function createEmptyRowWithForm() {
   )
   cancelButton.addEventListener('click', () => {
     tr.remove()
-    addButton.removeEventListener('click', addHandler)
   })
 
   // Append buttons to the actions td
