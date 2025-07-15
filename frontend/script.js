@@ -232,7 +232,7 @@ function createEmptyRowWithForm() {
     'event-add-button',
     'submit' // Set type to submit for form submission
   )
-  addButton.addEventListener('click', async (e) => {
+  addButton.addEventListener('click', async function (e) {
     e.preventDefault() // Prevents default button behavior (not form submission)
     // Validate inputs manually
     if (
@@ -270,6 +270,7 @@ function createEmptyRowWithForm() {
   )
   cancelButton.addEventListener('click', () => {
     tr.remove()
+    addButton.removeEventListener('click', addHandler)
   })
 
   // Append buttons to the actions td
