@@ -116,3 +116,19 @@ table.events-list {
 .add-event-form input[type='date']::placeholder {
   color: #aaa;
 }
+
+.event-item input[type='text'],
+.event-item input[type='date'] {
+  padding: 5px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+.event-item input[type='text']:focus,
+.event-item input[type='date']:focus {
+  border-color: #4caf50;
+  outline: none;
+}
+.event-item input[type='text']::placeholder,
+.event-item input[type='date']::placeholder {
+  color: #aaa;
+}
