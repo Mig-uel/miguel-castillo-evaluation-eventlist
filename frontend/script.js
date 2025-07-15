@@ -230,8 +230,7 @@ function createEmptyRowWithForm() {
   // Add Event button
   const addButton = createActionButton(
     `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
-    'event-add-button',
-    'submit' // Set type to submit for form submission
+    'event-add-button'
   )
   addButton.addEventListener('click', async function (e) {
     e.preventDefault() // Prevents default button behavior (not form submission)
