@@ -33,13 +33,20 @@ function createTableDataElement(content, className) {
 }
 
 // Helper function to create a table data element with an input field
-function createTableDataElementWithInput(value, type = 'text') {
+function createTableDataElementWithInput({
+  value = '',
+  type = 'text',
+  name = '',
+  placeholder = '',
+}) {
   const td = document.createElement('td')
 
   const input = document.createElement('input')
   input.type = type
   input.value = value
   input.required = true
+  input.name = name
+  input.placeholder = placeholder
   td.appendChild(input)
 
   return {
@@ -49,10 +56,11 @@ function createTableDataElementWithInput(value, type = 'text') {
 }
 
 // Helper function to create an action button
-function createActionButton(svgContent, className) {
+function createActionButton(svgContent, className, type = 'button') {
   const button = document.createElement('button')
   button.classList.add(className)
   button.innerHTML = svgContent
+  button.type = type
   // button.addEventListener('click', clickHandler)
   return button
 }
@@ -63,9 +71,21 @@ function createEditableRow(event, originalTr) {
   tr.classList.add('event-item')
 
   // Create table data elements for editable fields
-  const eventNameTd = createTableDataElementWithInput(event.eventName)
-  const startDateTd = createTableDataElementWithInput(event.startDate, 'date')
-  const endDateTd = createTableDataElementWithInput(event.endDate, 'date')
+  const eventNameTd = createTableDataElementWithInput({
+    value: event.eventName,
+    name: event.eventName,
+    placeholder: 'Event Name',
+  })
+  const startDateTd = createTableDataElementWithInput({
+    value: event.startDate,
+    type: 'date',
+    name: 'startDate',
+  })
+  const endDateTd = createTableDataElementWithInput({
+    value: event.endDate,
+    type: 'date',
+    name: 'endDate',
+  })
 
   // Create action td element
   const actionButtonsTd = document.createElement('td')
@@ -185,53 +205,53 @@ function createEmptyRowWithForm() {
   const tr = document.createElement('tr')
   tr.classList.add('event-item')
 
-  const td = document.createElement('td')
-  td.colSpan = 4 // spans all columns
-
   const form = document.createElement('form')
   form.classList.add('add-event-form')
-  form.style.display = 'flex'
-  form.style.gap = '8px'
 
-  // Event Name input
-  const eventNameInput = document.createElement('input')
-  eventNameInput.type = 'text'
-  eventNameInput.name = 'eventName'
-  eventNameInput.placeholder = 'Event Name'
-  eventNameInput.required = true
+  // Event Name Element
+  const eventNameElement = createTableDataElementWithInput({
+    name: 'eventName',
+    type: 'text',
+    placeholder: 'Event Name',
+  })
+  // Event Start Date Element
+  const startDateElement = createTableDataElementWithInput({
+    name: 'startDate',
+    type: 'date',
+  })
+  // Event End Date Element
+  const endDateElement = createTableDataElementWithInput({
+    name: 'endDate',
+    type: 'date',
+  })
 
-  // Start Date input
-  const startDateInput = document.createElement('input')
-  startDateInput.type = 'date'
-  startDateInput.name = 'startDate'
-  startDateInput.required = true
-
-  // End Date input
-  const endDateInput = document.createElement('input')
-  endDateInput.type = 'date'
-  endDateInput.name = 'endDate'
-  endDateInput.required = true
+  // Create actions buttons td
+  const actionsTd = document.createElement('td')
+  actionsTd.classList.add('event-actions')
 
   // Add Event button
-  const addButton = document.createElement('button')
-  addButton.classList.add('add-button')
-  addButton.type = 'submit'
-  addButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`
-
+  const addButton = createActionButton(
+    `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M12 5v14m7-7H5" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round"/></svg>`,
+    'event-add-button',
+    'submit' // Set type to submit for form submission
+  )
   // Cancel button
-  const cancelButton = document.createElement('button')
-  cancelButton.classList.add('cancel-button')
-  cancelButton.type = 'button'
-  cancelButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="vertical-align:middle;width:1em;height:1em;"><path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z" fill="currentColor"/></svg>`
+  const cancelButton = createActionButton(
+    `<svg focusable="false" aria-hidden="true" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="vertical-align:middle;width:1em;height:1em;"><path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z" fill="currentColor"/></svg>`,
+    'event-cancel-button'
+  )
   cancelButton.addEventListener('click', () => {
     tr.remove()
   })
 
-  form.appendChild(eventNameInput)
-  form.appendChild(startDateInput)
-  form.appendChild(endDateInput)
-  form.appendChild(addButton)
-  form.appendChild(cancelButton)
+  // Append buttons to the actions td
+  actionsTd.appendChild(addButton)
+  actionsTd.appendChild(cancelButton)
+
+  form.appendChild(eventNameElement.td)
+  form.appendChild(startDateElement.td)
+  form.appendChild(endDateElement.td)
+  form.appendChild(actionsTd)
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault()
@@ -262,9 +282,13 @@ function createEmptyRowWithForm() {
       console.error('Error adding event:', res.statusText)
     }
   })
+  tr.appendChild(form)
 
-  td.appendChild(form)
-  tr.appendChild(td)
+  tr.appendChild(eventNameElement.td)
+  tr.appendChild(startDateElement.td)
+  tr.appendChild(endDateElement.td)
+  tr.appendChild(actionsTd)
+
   return tr
 }
 
@@ -275,6 +299,5 @@ loadEvents()
 // Add event listener for the "Add Event" button to toggle the form visibility
 addEventButtonElement.addEventListener('click', () => {
   const emptyRow = createEmptyRowWithForm()
-
   eventsListElement.appendChild(emptyRow)
 })
