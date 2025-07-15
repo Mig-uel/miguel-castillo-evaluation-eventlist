@@ -32,6 +32,15 @@ function createTableDataElement(content, className) {
   return td
 }
 
+// Helper function to create an action button
+function createActionButton(svgContent, className) {
+  const button = document.createElement('button')
+  button.classList.add(className)
+  button.innerHTML = svgContent
+  // button.addEventListener('click', clickHandler)
+  return button
+}
+
 function createEventRow(event) {
   // Create a new table row for the event
   const tr = document.createElement('tr')
@@ -49,26 +58,28 @@ function createEventRow(event) {
   const actionsElement = document.createElement('td')
   actionsElement.classList.add('event-actions')
 
-  // Create actions buttons
-  const editButton = document.createElement('button')
-  editButton.classList.add('event-edit-button')
-  editButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
+  // Create delete buttons
+  const editButton = createActionButton(
+    `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
   <path d="m13.498.795.149-.149a1.207 1.207 0 1 1 1.707 1.708l-.149.148a1.5 1.5 0 0 1-.059 2.059L4.854 14.854a.5.5 0 0 1-.233.131l-4 1a.5.5 0 0 1-.606-.606l1-4a.5.5 0 0 1 .131-.232l9.642-9.642a.5.5 0 0 0-.642.056L6.854 4.854a.5.5 0 1 1-.708-.708L9.44.854A1.5 1.5 0 0 1 11.5.796a1.5 1.5 0 0 1 1.998-.001m-.644.766a.5.5 0 0 0-.707 0L1.95 11.756l-.764 3.057 3.057-.764L14.44 3.854a.5.5 0 0 0 0-.708z"/>
-</svg>`
-
-  // Create delete button
-  const deleteButton = document.createElement('button')
-  deleteButton.classList.add('delete-button')
-  deleteButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DeleteIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"></path></svg>`
-  deleteButton.addEventListener('click', async () => {
-    await fetch(`${BASE_URL}/${event.id}`, { method: 'DELETE' })
-    tr.remove()
-  })
-
+</svg>`,
+    'event-edit-button'
+  )
   // Add event listener for the edit button
   editButton.addEventListener('click', () => {
     const editableRow = createEditableRow(event, tr)
     tr.replaceWith(editableRow)
+  })
+
+  // Create delete button
+  const deleteButton = createActionButton(
+    `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" data-testid="DeleteIcon" aria-label="fontSize small" style="vertical-align:middle;width:1em;height:1em;"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z" fill="currentColor"></path></svg>`,
+    'delete-button'
+  )
+  // Add event listener for the delete button
+  deleteButton.addEventListener('click', async () => {
+    await fetch(`${BASE_URL}/${event.id}`, { method: 'DELETE' })
+    tr.remove()
   })
 
   // Helper to create editable row for inline editing
