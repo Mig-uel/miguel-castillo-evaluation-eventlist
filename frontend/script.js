@@ -147,6 +147,7 @@ function createEditableRow(event, originalTr) {
   return tr
 }
 
+// Create a new row for an event
 function createEventRow(event) {
   // Create a new table row for the event
   const tr = document.createElement('tr')
@@ -201,6 +202,7 @@ function createEventRow(event) {
   return tr
 }
 
+// Create an empty row with a form for adding a new event
 function createEmptyRowWithForm() {
   const tr = document.createElement('tr')
   tr.classList.add('event-item')
