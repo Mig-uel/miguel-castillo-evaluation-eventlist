@@ -286,8 +286,6 @@ function createEmptyRowWithForm() {
 
 loadEvents()
 
-// TODO => improve event listener handling to avoid memory leaks
-
 // Add event listener for the "Add Event" button to toggle the form visibility
 addEventButtonElement.addEventListener('click', () => {
   const emptyRow = createEmptyRowWithForm()
