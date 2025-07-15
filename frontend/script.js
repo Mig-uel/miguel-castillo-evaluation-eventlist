@@ -92,7 +92,6 @@ function createEditableRow(event, originalTr) {
       alert('Failed to update event')
     }
   })
-  saveTd.appendChild(saveButton)
 
   // Create a cancel button
   const cancelButton = createActionButton(
