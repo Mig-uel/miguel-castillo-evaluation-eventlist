@@ -31,39 +31,9 @@ table.events-list {
   width: 100%;
 }
 
-.add-event-button,
-.add-button {
-  background-color: #008cba;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.event-cancel-button {
-  background-color: red;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.event-save-button {
-  background-color: #008cba;
-  color: white;
-  border: none;
-  padding: 5px 10px;
-  cursor: pointer;
-  border-radius: 4px;
-}
-
-.event-actions {
-  display: flex;
-  gap: 10px;
-}
-
+.event-new-button,
+.event-save-button,
+.event-add-button,
 .event-edit-button {
   background-color: #008cba;
   color: white;
@@ -73,7 +43,15 @@ table.events-list {
   border-radius: 4px;
 }
 
-.delete-button {
+.event-new-button:hover,
+.event-save-button:hover,
+.event-add-button:hover,
+.event-edit-button:hover {
+  background-color: #005f73;
+}
+
+.event-cancel-button,
+.event-delete-button {
   background-color: red;
   color: white;
   border: none;
@@ -82,39 +60,14 @@ table.events-list {
   border-radius: 4px;
 }
 
-.delete-button:hover {
+.event-cancel-button:hover,
+.event-delete-button:hover {
   background-color: darkred;
 }
-.add-event-form {
-  margin-bottom: 20px;
-}
-.add-event-form input {
-  margin-right: 10px;
-}
-.add-event-form button {
-  padding: 5px 10px;
-  background-color: #008cba;
-  color: white;
-  border: none;
-  cursor: pointer;
-}
-.add-event-form button:hover {
-  background-color: #005f73;
-}
-.add-event-form input[type='text'],
-.add-event-form input[type='date'] {
-  padding: 5px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-}
-.add-event-form input[type='text']:focus,
-.add-event-form input[type='date']:focus {
-  border-color: #4caf50;
-  outline: none;
-}
-.add-event-form input[type='text']::placeholder,
-.add-event-form input[type='date']::placeholder {
-  color: #aaa;
+
+.event-actions {
+  display: flex;
+  gap: 10px;
 }
 
 .event-item input[type='text'],
