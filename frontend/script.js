@@ -1,7 +1,6 @@
 const BASE_URL = 'http://localhost:3000/events'
 
 const eventsListElement = document.querySelector('.events-list-body')
-const addEventFormElement = document.querySelector('.add-event-form')
 const addEventButtonElement = document.querySelector('.event-new-button')
 
 // Load events from the server and populate the table
