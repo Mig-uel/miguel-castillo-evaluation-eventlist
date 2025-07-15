@@ -205,9 +205,6 @@ function createEmptyRowWithForm() {
   const tr = document.createElement('tr')
   tr.classList.add('event-item')
 
-  const form = document.createElement('form')
-  form.classList.add('add-event-form')
-
   // Event Name Element
   const eventNameElement = createTableDataElementWithInput({
     name: 'eventName',
@@ -235,6 +232,37 @@ function createEmptyRowWithForm() {
     'event-add-button',
     'submit' // Set type to submit for form submission
   )
+  addButton.addEventListener('click', async (e) => {
+    e.preventDefault() // Prevents default button behavior (not form submission)
+    // Validate inputs manually
+    if (
+      !eventNameElement.input.value ||
+      !startDateElement.input.value ||
+      !endDateElement.input.value
+    )
+      return
+    const newEvent = {
+      eventName: eventNameElement.input.value,
+      startDate: startDateElement.input.value,
+      endDate: endDateElement.input.value,
+    }
+    // Submit the new event to the server
+    const res = await fetch(BASE_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(newEvent),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      // Create a new row with the added event
+      const newRow = createEventRow(data)
+      // Append the new row to the events list
+      eventsListElement.appendChild(newRow)
+      // Remove the empty row with form
+      tr.remove()
+    }
+  })
+
   // Cancel button
   const cancelButton = createActionButton(
     `<svg focusable="false" aria-hidden="true" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="vertical-align:middle;width:1em;height:1em;"><path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z" fill="currentColor"/></svg>`,
@@ -247,42 +275,6 @@ function createEmptyRowWithForm() {
   // Append buttons to the actions td
   actionsTd.appendChild(addButton)
   actionsTd.appendChild(cancelButton)
-
-  form.appendChild(eventNameElement.td)
-  form.appendChild(startDateElement.td)
-  form.appendChild(endDateElement.td)
-  form.appendChild(actionsTd)
-
-  form.addEventListener('submit', async (e) => {
-    e.preventDefault()
-    e.stopPropagation()
-
-    if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
-      return
-
-    const event = {
-      eventName: eventNameInput.value,
-      startDate: startDateInput.value,
-      endDate: endDateInput.value,
-    }
-
-    const res = await fetch(BASE_URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(event),
-    })
-
-    if (res.ok) {
-      const data = await res.json()
-      eventsListElement.appendChild(createEventRow(data))
-      tr.remove()
-    } else {
-      console.error('Error adding event:', res.statusText)
-    }
-  })
-  tr.appendChild(form)
 
   tr.appendChild(eventNameElement.td)
   tr.appendChild(startDateElement.td)
