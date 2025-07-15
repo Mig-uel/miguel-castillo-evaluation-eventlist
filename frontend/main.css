@@ -41,7 +41,7 @@ table.events-list {
   border-radius: 4px;
 }
 
-.cancel-button {
+.event-cancel-button {
   background-color: red;
   color: white;
   border: none;
@@ -50,7 +50,7 @@ table.events-list {
   border-radius: 4px;
 }
 
-.save-button {
+.event-save-button {
   background-color: #008cba;
   color: white;
   border: none;
