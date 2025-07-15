@@ -32,6 +32,18 @@ function createTableDataElement(content, className) {
   return td
 }
 
+// Helper function to create a table data element with an input field
+function createTableDataElementWithInput(value, type = 'text') {
+  const td = document.createElement('td')
+
+  const input = document.createElement('input')
+  input.type = type
+  input.value = value
+  input.required = true
+  td.appendChild(input)
+  return td
+}
+
 // Helper function to create an action button
 function createActionButton(svgContent, className) {
   const button = document.createElement('button')
@@ -39,6 +51,69 @@ function createActionButton(svgContent, className) {
   button.innerHTML = svgContent
   // button.addEventListener('click', clickHandler)
   return button
+}
+
+// Helper to create editable row for inline editing
+function createEditableRow(event, originalTr) {
+  const tr = document.createElement('tr')
+  tr.classList.add('event-item')
+
+  // Create table data elements for editable fields
+  const eventNameTd = createTableDataElementWithInput(event.eventName)
+  const startDateTd = createTableDataElementWithInput(event.startDate, 'date')
+  const endDateTd = createTableDataElementWithInput(event.endDate, 'date')
+
+  // Create action td element
+  const actionButtonsTd = document.createElement('td')
+  actionButtonsTd.classList.add('event-actions')
+
+  // Create a save button
+  const saveButton = createActionButton(
+    `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M21,20V8.414a1,1,0,0,0-.293-.707L16.293,3.293A1,1,0,0,0,15.586,3H4A1,1,0,0,0,3,4V20a1,1,0,0,0,1,1H20A1,1,0,0,0,21,20ZM9,8h4a1,1,0,0,1,0,2H9A1,1,0,0,1,9,8Zm7,11H8V15a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1Z" fill="currentColor"/></svg>`,
+    'event-save-button'
+  )
+  saveButton.addEventListener('click', async () => {
+    if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
+      return
+    const updatedEvent = {
+      eventName: eventNameInput.value,
+      startDate: startDateInput.value,
+      endDate: endDateInput.value,
+    }
+    const res = await fetch(`${BASE_URL}/${event.id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(updatedEvent),
+    })
+    if (res.ok) {
+      const data = await res.json()
+      tr.replaceWith(createEventRow(data))
+    } else {
+      alert('Failed to update event')
+    }
+  })
+  saveTd.appendChild(saveButton)
+
+  // Create a cancel button
+  const cancelButton = createActionButton(
+    `<svg focusable="false" aria-hidden="true" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="vertical-align:middle;width:1em;height:1em;"><path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z" fill="currentColor"/></svg>`,
+    'event-cancel-button'
+  )
+  cancelButton.addEventListener('click', () => {
+    tr.replaceWith(originalTr)
+  })
+
+  // Append buttons to the action buttons td
+  actionButtonsTd.appendChild(saveButton)
+  actionButtonsTd.appendChild(cancelButton)
+
+  // Append all elements to the row
+  tr.appendChild(eventNameTd)
+  tr.appendChild(startDateTd)
+  tr.appendChild(endDateTd)
+  tr.appendChild(actionButtonsTd)
+
+  return tr
 }
 
 function createEventRow(event) {
@@ -81,83 +156,6 @@ function createEventRow(event) {
     await fetch(`${BASE_URL}/${event.id}`, { method: 'DELETE' })
     tr.remove()
   })
-
-  // Helper to create editable row for inline editing
-  // function createEditableRow(event, originalTr) {
-  //   const tr = document.createElement('tr')
-  //   tr.classList.add('event-item')
-
-  //   // Event Name input
-  //   const eventNameTd = document.createElement('td')
-  //   const eventNameInput = document.createElement('input')
-  //   eventNameInput.type = 'text'
-  //   eventNameInput.value = event.eventName
-  //   eventNameInput.required = true
-  //   eventNameTd.appendChild(eventNameInput)
-
-  //   // Start Date input
-  //   const startDateTd = document.createElement('td')
-  //   const startDateInput = document.createElement('input')
-  //   startDateInput.type = 'date'
-  //   startDateInput.value = event.startDate
-  //   startDateInput.required = true
-  //   startDateTd.appendChild(startDateInput)
-
-  //   // End Date input
-  //   const endDateTd = document.createElement('td')
-  //   const endDateInput = document.createElement('input')
-  //   endDateInput.type = 'date'
-  //   endDateInput.value = event.endDate
-  //   endDateInput.required = true
-  //   endDateTd.appendChild(endDateInput)
-
-  //   // Save button
-  //   const saveTd = document.createElement('td')
-  //   const saveButton = document.createElement('button')
-  //   saveButton.classList.add('save-button')
-  //   saveButton.type = 'button'
-  //   saveButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" style="vertical-align:middle;width:1em;height:1em;"><path d="M21,20V8.414a1,1,0,0,0-.293-.707L16.293,3.293A1,1,0,0,0,15.586,3H4A1,1,0,0,0,3,4V20a1,1,0,0,0,1,1H20A1,1,0,0,0,21,20ZM9,8h4a1,1,0,0,1,0,2H9A1,1,0,0,1,9,8Zm7,11H8V15a1,1,0,0,1,1-1h6a1,1,0,0,1,1,1Z" fill="currentColor"/></svg>`
-  //   saveButton.addEventListener('click', async () => {
-  //     if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
-  //       return
-  //     const updatedEvent = {
-  //       eventName: eventNameInput.value,
-  //       startDate: startDateInput.value,
-  //       endDate: endDateInput.value,
-  //     }
-  //     const res = await fetch(`${BASE_URL}/${event.id}`, {
-  //       method: 'PUT',
-  //       headers: { 'Content-Type': 'application/json' },
-  //       body: JSON.stringify(updatedEvent),
-  //     })
-  //     if (res.ok) {
-  //       const data = await res.json()
-  //       tr.replaceWith(createEventRow(data))
-  //     } else {
-  //       alert('Failed to update event')
-  //     }
-  //   })
-  //   saveTd.appendChild(saveButton)
-
-  //   // Cancel button
-  //   // const cancelTd = document.createElement('td')
-  //   const cancelButton = document.createElement('button')
-  //   cancelButton.classList.add('cancel-button')
-  //   cancelButton.type = 'button'
-  //   cancelButton.innerHTML = `<svg focusable="false" aria-hidden="true" viewBox="0 0 32 32" version="1.1" xmlns="http://www.w3.org/2000/svg" width="16" height="16" style="vertical-align:middle;width:1em;height:1em;"><path d="M19.587 16.001l6.096 6.096c0.396 0.396 0.396 1.039 0 1.435l-2.151 2.151c-0.396 0.396-1.038 0.396-1.435 0l-6.097-6.096-6.097 6.096c-0.396 0.396-1.038 0.396-1.434 0l-2.152-2.151c-0.396-0.396-0.396-1.038 0-1.435l6.097-6.096-6.097-6.097c-0.396-0.396-0.396-1.039 0-1.435l2.153-2.151c0.396-0.396 1.038-0.396 1.434 0l6.096 6.097 6.097-6.097c0.396-0.396 1.038-0.396 1.435 0l2.151 2.152c0.396 0.396 0.396 1.038 0 1.435l-6.096 6.096z" fill="currentColor"/></svg>`
-  //   cancelButton.addEventListener('click', () => {
-  //     tr.replaceWith(originalTr)
-  //   })
-  //   // cancelTd.appendChild(cancelButton)
-
-  //   tr.appendChild(eventNameTd)
-  //   tr.appendChild(startDateTd)
-  //   tr.appendChild(endDateTd)
-  //   tr.appendChild(saveTd)
-  //   tr.appendChild(cancelTd)
-
-  //   return tr
-  // }
 
   // Append buttons to the actions element
   actionsElement.appendChild(editButton)
