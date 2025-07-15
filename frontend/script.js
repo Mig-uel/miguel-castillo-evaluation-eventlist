@@ -41,7 +41,11 @@ function createTableDataElementWithInput(value, type = 'text') {
   input.value = value
   input.required = true
   td.appendChild(input)
-  return td
+
+  return {
+    td,
+    input,
+  }
 }
 
 // Helper function to create an action button
@@ -73,18 +77,26 @@ function createEditableRow(event, originalTr) {
     'event-save-button'
   )
   saveButton.addEventListener('click', async () => {
-    if (!eventNameInput.value || !startDateInput.value || !endDateInput.value)
+    if (
+      !eventNameTd.input.value ||
+      !startDateTd.input.value ||
+      !endDateTd.input.value
+    )
       return
+
     const updatedEvent = {
-      eventName: eventNameInput.value,
-      startDate: startDateInput.value,
-      endDate: endDateInput.value,
+      eventName: eventNameTd.input.value,
+      startDate: startDateTd.input.value,
+      endDate: endDateTd.input.value,
     }
+
+    // Update the event on the server
     const res = await fetch(`${BASE_URL}/${event.id}`, {
       method: 'PUT',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(updatedEvent),
     })
+
     if (res.ok) {
       const data = await res.json()
       tr.replaceWith(createEventRow(data))
@@ -107,9 +119,9 @@ function createEditableRow(event, originalTr) {
   actionButtonsTd.appendChild(cancelButton)
 
   // Append all elements to the row
-  tr.appendChild(eventNameTd)
-  tr.appendChild(startDateTd)
-  tr.appendChild(endDateTd)
+  tr.appendChild(eventNameTd.td)
+  tr.appendChild(startDateTd.td)
+  tr.appendChild(endDateTd.td)
   tr.appendChild(actionButtonsTd)
 
   return tr
@@ -258,8 +270,6 @@ function createEmptyRowWithForm() {
 
 loadEvents()
 
-// TODO => add edit, delete, and save button function with custom args
-// TODO => DRY up the code for creating event rows and empty rows with forms
 // TODO => improve event listener handling to avoid memory leaks
 
 // Add event listener for the "Add Event" button to toggle the form visibility
